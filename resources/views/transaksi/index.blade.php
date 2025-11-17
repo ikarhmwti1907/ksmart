@@ -1,0 +1,308 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mt-4">
+    <h2 class="mb-4 text-left">💰 Transaksi Penjualan</h2>
+
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark text-white fw-semibold">Input Transaksi</div>
+        <div class="card-body">
+
+            <button type="button" id="tambahBarang" class="btn btn-secondary mb-3">➕ Tambah Barang</button>
+
+            <form action="{{ route('transaksi.store') }}" method="POST" id="formTransaksi">
+                @csrf
+
+                <table class="table table-bordered text-center align-middle" id="tabelBarang">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Barang</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td style="width: 300px; position: relative;">
+                                <input type="text" name="nama_barang[]" class="form-control nama-barang"
+                                    placeholder="Ketik nama barang..." autocomplete="off">
+
+                                <div class="hasil-pencarian"></div>
+
+                                <input type="hidden" name="barang_id[]" class="barang-id">
+                                <input type="hidden" name="stok[]" class="stok-barang">
+                            </td>
+
+                            <td class="harga fw-semibold text-black" data-harga="0">Rp 0</td>
+
+                            <td>
+                                <input type="number" min="1" name="jumlah[]" class="form-control jumlah text-center"
+                                    value="1">
+                            </td>
+
+                            <td class="subtotal fw-semibold text-black">Rp 0</td>
+
+                            <td>
+                                <button type="button" class="btn btn-outline-danger btn-sm hapus-baris">🗑</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mb-3">
+                    <label class="fw-semibold">Total (Rp)</label>
+                    <input type="text" id="total" name="total" class="form-control fw-bold text-dark" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-semibold">Bayar (Rp)</label>
+                    <input type="number" id="bayar" name="bayar" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-semibold">Kembalian (Rp)</label>
+                    <input type="text" id="kembalian" class="form-control fw-bold text-dark" readonly>
+                </div>
+
+                <button class="btn btn-success" type="submit">💾 Simpan Transaksi</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white fw-semibold">🧾 Riwayat Transaksi</div>
+        <div class="card-body">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Total</th>
+                        <th>Bayar</th>
+                        <th>Kembalian</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach($transaksis as $t)
+                    <tr>
+                        <td>{{ $t->tanggal }}</td>
+                        <td class="fw-semibold text-dark">Rp {{ number_format($t->total) }}</td>
+                        <td>Rp {{ number_format($t->bayar) }}</td>
+                        <td class="fw-semibold text-dark">Rp {{ number_format($t->kembalian) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.hasil-pencarian {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    max-height: 260px;
+    overflow-y: auto;
+    display: none;
+}
+
+.list-group-item {
+    padding: 10px 14px;
+}
+
+.list-group-item:hover {
+    background: #f5faff;
+}
+
+.disabled-item {
+    background: #eee !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+}
+
+.disabled-item:hover {
+    background: #eee !important;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const formatRupiah = (x) => "Rp " + new Intl.NumberFormat("id-ID").format(x);
+    const getNum = (v) => parseInt(String(v).replace(/\D/g, "")) || 0;
+
+    const hitungTotal = () => {
+        let total = 0;
+
+        document.querySelectorAll("#tabelBarang tbody tr").forEach(tr => {
+            let harga = parseInt(tr.querySelector(".harga").dataset.harga || 0);
+            let jumlah = parseInt(tr.querySelector(".jumlah").value || 0);
+
+            let subtotal = harga * jumlah;
+            tr.querySelector(".subtotal").textContent = formatRupiah(subtotal);
+
+            total += subtotal;
+        });
+
+        document.getElementById("total").value = formatRupiah(total);
+
+        let bayar = getNum(document.getElementById("bayar").value);
+        document.getElementById("kembalian").value = formatRupiah(bayar - total);
+    };
+
+    /* ============================
+        LIVE SEARCH OTOMATIS
+    ============================ */
+    document.addEventListener("input", function(e) {
+        if (!e.target.classList.contains("nama-barang")) return;
+
+        let tr = e.target.closest("tr");
+        let keyword = e.target.value.trim();
+        let box = tr.querySelector(".hasil-pencarian");
+
+        if (keyword.length < 1) {
+            box.style.display = "none";
+            return;
+        }
+
+        fetch(`/barang/search?keyword=${encodeURIComponent(keyword)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.length) {
+                    box.innerHTML =
+                        `<div class="p-2 text-danger text-center">Barang tidak ditemukan</div>`;
+                    box.style.display = "block";
+                    return;
+                }
+
+                let html = `<div class="list-group">`;
+
+                data.forEach(b => {
+                    let disableClass = b.stok <= 0 ? "disabled-item" : "";
+
+                    html += `
+                        <button type="button"
+                            class="list-group-item pilih-barang ${disableClass}"
+                            data-id="${b.id}"
+                            data-nama="${b.nama}"
+                            data-harga="${b.harga}"
+                            data-stok="${b.stok}">
+                            <b>${b.nama}</b><br>
+                            Harga: Rp ${new Intl.NumberFormat("id-ID").format(b.harga)}<br>
+                            Stok: ${b.stok <= 0 ? "<span class='text-danger fw-bold'>HABIS</span>" : b.stok}
+                        </button>
+                    `;
+                });
+
+                html += "</div>";
+                box.innerHTML = html;
+                box.style.display = "block";
+            });
+    });
+
+    /* ============================
+        PILIH BARANG DARI DROPDOWN
+    ============================ */
+    document.addEventListener("click", e => {
+
+        let btn = e.target.closest(".pilih-barang");
+        if (!btn) return;
+
+        if (btn.classList.contains("disabled-item")) return;
+
+        let tr = btn.closest("tr");
+
+        tr.querySelector(".nama-barang").value = btn.dataset.nama;
+        tr.querySelector(".barang-id").value = btn.dataset.id;
+        tr.querySelector(".stok-barang").value = btn.dataset.stok;
+
+        tr.querySelector(".harga").dataset.harga = btn.dataset.harga;
+        tr.querySelector(".harga").textContent = formatRupiah(btn.dataset.harga);
+
+        tr.querySelector(".jumlah").value = 1;
+
+        tr.querySelector(".hasil-pencarian").style.display = "none";
+
+        hitungTotal();
+    });
+
+    /* Tutup dropdown ketika klik luar */
+    document.addEventListener("click", e => {
+        document.querySelectorAll(".hasil-pencarian").forEach(box => {
+            if (!box.contains(e.target) && !e.target.classList.contains("nama-barang")) {
+                box.style.display = "none";
+            }
+        });
+    });
+
+    /* ============================
+        INPUT JUMLAH / BAYAR
+    ============================ */
+    document.addEventListener("input", e => {
+        if (e.target.classList.contains("jumlah") || e.target.id === "bayar") {
+            hitungTotal();
+        }
+    });
+
+    /* ============================
+        TAMBAH BARIS OTOMATIS (FINAL)
+    ============================ */
+    document.addEventListener("click", function(e) {
+        if (e.target.id === "tambahBarang") {
+
+            let tbody = document.querySelector("#tabelBarang tbody");
+
+            let template = document.querySelector("#tabelBarang tbody tr:first-child");
+            let tr = template.cloneNode(true);
+
+            // reset input
+            tr.querySelector(".nama-barang").value = "";
+            tr.querySelector(".hasil-pencarian").innerHTML = "";
+            tr.querySelector(".barang-id").value = "";
+            tr.querySelector(".stok-barang").value = "";
+            tr.querySelector(".jumlah").value = 1;
+
+            // reset harga & subtotal
+            tr.querySelector(".harga").dataset.harga = 0;
+            tr.querySelector(".harga").textContent = "Rp 0";
+            tr.querySelector(".subtotal").textContent = "Rp 0";
+
+            tbody.appendChild(tr);
+        }
+    });
+
+
+    /* ============================
+        HAPUS BARIS
+    ============================ */
+    document.addEventListener("click", e => {
+        if (e.target.classList.contains("hapus-baris")) {
+            let tr = e.target.closest("tr");
+            tr.remove();
+            hitungTotal();
+        }
+    });
+
+});
+</script>
+
+@endsection
