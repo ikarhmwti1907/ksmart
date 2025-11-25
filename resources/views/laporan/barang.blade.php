@@ -3,12 +3,12 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-3 text-left">📄 Laporan Data Barang</h3>
+    <h3 class="mb-3 text-left">
+        <i class="bi bi-file-earmark-text me-2"></i> Laporan Data Barang
+    </h3>
 
     <div class="card shadow-sm">
         <div class="card-body">
-
-            <!-- Wrapper agar tabel bisa scroll di HP -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle text-center">
                     <thead class="table-dark">
@@ -33,7 +33,6 @@
                     </tbody>
                 </table>
             </div>
-            <!-- END table-responsive -->
 
         </div>
     </div>

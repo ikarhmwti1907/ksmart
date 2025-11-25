@@ -4,7 +4,9 @@
 @section('content')
 <div class="container mt-3">
 
-    <h3 class="mb-4">➕ Tambah Barang</h3>
+    <h3 class="mb-4">
+        <i class="bi bi-plus-circle me-2"></i> Tambah Barang
+    </h3>
 
     <div class="card shadow-sm">
         <div class="card-body">
@@ -27,8 +29,13 @@
                     <input type="number" name="harga" class="form-control" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary px-4">Simpan</button>
-                <a href="{{ route('barang.index') }}" class="btn btn-secondary px-4">Kembali</a>
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check-circle me-1"></i> Simpan
+                </button>
+
+                <a href="{{ route('barang.index') }}" class="btn btn-secondary px-4">
+                    <i class="bi bi-arrow-left-circle me-1"></i> Kembali
+                </a>
             </form>
 
         </div>

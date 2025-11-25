@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SmartKasir')</title>
 
-    <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <style>
     body {
@@ -16,7 +16,7 @@
         font-family: sans-serif;
     }
 
-    /* ================== SIDEBAR ================== */
+
     .sidebar {
         width: 230px;
         position: fixed;
@@ -47,7 +47,6 @@
         padding-left: 30px;
     }
 
-    /* ================== NAVBAR ================== */
     .navbar-custom {
         background-color: #F47C20;
         position: fixed;
@@ -70,16 +69,13 @@
         font-weight: bold;
     }
 
-    /* ================== CONTENT ================== */
     .main-content {
         margin-left: 230px;
         padding: 80px 20px 20px;
-        /* FIX: hapus z-index dan position agar modal tidak ketutup */
         z-index: auto !important;
         position: static !important;
     }
 
-    /* ================== FIX MODAL Z-INDEX ================== */
     .modal-backdrop {
         z-index: 3000 !important;
     }
@@ -92,7 +88,6 @@
         z-index: 5000 !important;
     }
 
-    /* Logout button */
     .btn-logout {
         background-color: #1F3A5F;
         color: white;
@@ -108,7 +103,7 @@
         padding-left: 25px;
     }
 
-    /* ================== RESPONSIVE ================== */
+    /* Responsive */
     @media (max-width: 768px) {
         .sidebar {
             transform: translateX(-230px);
@@ -136,7 +131,7 @@
 
 <body>
 
-    <!-- ================== SIDEBAR ================== -->
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
 
         <div>
@@ -146,35 +141,51 @@
             </div>
 
             <div class="menu">
-                <a href="{{ url('/dashboard') }}">🏠 Dashboard</a>
-                <a href="{{ url('/barang') }}">📦 Kelola Barang</a>
-                <a href="{{ url('/transaksi') }}">💰 Transaksi</a>
-                <a href="{{ url('/laporan/barang') }}">📊 Laporan Barang</a>
-                <a href="{{ url('/laporan/transaksi') }}">📈 Laporan Transaksi</a>
-                <a href="{{ route('profile') }}">👤 Profil</a>
+                <a href="{{ url('/dashboard') }}">
+                    <i class="bi bi-house-door-fill me-2"></i> Dashboard
+                </a>
+
+                <a href="{{ url('/barang') }}">
+                    <i class="bi bi-box-seam me-2"></i> Kelola Barang
+                </a>
+
+                <a href="{{ url('/transaksi') }}">
+                    <i class="bi bi-cash-stack me-2"></i> Transaksi
+                </a>
+
+                <a href="{{ url('/laporan/barang') }}">
+                    <i class="bi bi-clipboard-data me-2"></i> Laporan Barang
+                </a>
+
+                <a href="{{ url('/laporan/transaksi') }}">
+                    <i class="bi bi-bar-chart-line me-2"></i> Laporan Transaksi
+                </a>
             </div>
         </div>
 
         <button type="button" class="btn-logout" data-bs-toggle="modal" data-bs-target="#logoutModal">
-            🚪 Logout
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
         </button>
     </div>
 
-    <!-- ================== NAVBAR ================== -->
+    <!-- Navbar -->
     <nav class="navbar navbar-custom px-4">
         <div class="container-fluid d-flex justify-content-between align-items-center">
-            <span class="toggle-btn" onclick="toggleSidebar()">☰</span>
+            <span class="toggle-btn" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </span>
             <span class="navbar-brand mb-0 h4">SmartKasir</span>
-            <span class="text-white">Halo, {{ Auth::user()->name ?? 'Kasir' }}</span>
+            <span class="text-white">
+                <i class="bi bi-person-fill me-1"></i> Halo, {{ Auth::user()->name ?? 'Kasir' }}
+            </span>
         </div>
     </nav>
 
-    <!-- ================== MAIN CONTENT ================== -->
     <div class="main-content">
         @yield('content')
     </div>
 
-    <!-- ================== LOGOUT MODAL ================== -->
+    <!-- Modal Logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -183,8 +194,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <img src="https://cdn-icons-png.flaticon.com/512/992/992680.png" width="80" class="mb-3">
-                    <h5>Yakin ingin keluar dari akun?</h5>
+                    <i class="bi bi-box-arrow-right" style="font-size: 60px; color:#dc3545"></i>
+                    <h5 class="mt-3">Yakin ingin keluar dari akun?</h5>
                     <p class="text-muted">Pastikan semua transaksi telah disimpan sebelum logout.</p>
                 </div>
                 <div class="modal-footer justify-content-center">

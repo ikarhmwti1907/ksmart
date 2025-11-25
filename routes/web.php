@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BarangController;
@@ -21,22 +20,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot.password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot.password.send');
 
-// Profile
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
-Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
     ->name('dashboard');
 
 // Kelola Barang
-    Route::get('/barang/search', [BarangController::class, 'search'])
-     ->name('barang.search');
+Route::get('/barang/search', [BarangController::class, 'search'])
+    ->name('barang.search');
 
-    Route::resource('barang', BarangController::class)->middleware('auth');
-
+Route::resource('barang', BarangController::class)->middleware('auth');
 
 // Kelola Transaksi
 Route::resource('transaksi', TransaksiController::class)->middleware('auth');
@@ -44,12 +37,11 @@ Route::resource('transaksi', TransaksiController::class)->middleware('auth');
 // Laporan
 Route::middleware('auth')->group(function () {
     
-    // Laporan Barang
-    Route::get('/laporan/barang', [LaporanController::class, 'laporanBarang'])
-        ->name('laporan.barang');
+// Laporan Barang
+Route::get('/laporan/barang', [LaporanController::class, 'laporanBarang'])
+    ->name('laporan.barang');
 
-    // Laporan Transaksi
-    Route::get('laporan/transaksi', [LaporanController::class, 'transaksi']);
-
+// Laporan Transaksi
+Route::get('laporan/transaksi', [LaporanController::class, 'transaksi']);
 
 });

@@ -68,7 +68,7 @@
 <script>
 $(document).ready(function() {
 
-    // ========== CARI BARANG ==========
+    // Cari Barang
     $(document).on('input', '.cari-barang', function() {
         let keyword = $(this).val();
         let hasil = $(this).closest('td').find('.hasil-pencarian');
@@ -88,7 +88,7 @@ $(document).ready(function() {
                 if (data.length === 0) {
                     hasil.html(
                         '<div class="list-group-item text-danger">Barang tidak ditemukan</div>'
-                        );
+                    );
                     return;
                 }
 
@@ -112,7 +112,6 @@ $(document).ready(function() {
         });
     });
 
-    // ========== PILIH BARANG ==========
     $(document).on('click', '.pilih-barang', function() {
         let tr = $(this).closest('tr');
 
@@ -130,7 +129,7 @@ $(document).ready(function() {
         $(this).closest('.hasil-pencarian').html('');
     });
 
-    // ========== HITUNG SUBTOTAL ==========
+    // Hitung Subtotal
     $(document).on('input', '.jumlah', function() {
         let tr = $(this).closest('tr');
         let harga = parseInt(tr.find('.harga').data('harga')) || 0;
@@ -139,7 +138,6 @@ $(document).ready(function() {
         tr.find('.subtotal').text('Rp ' + (jumlah * harga).toLocaleString());
     });
 
-    // ========== TAMBAH BARIS ==========
     $('#tambah-baris').click(function() {
         let row = $('#tbody-barang tr:first').clone();
 
@@ -151,7 +149,6 @@ $(document).ready(function() {
         $('#tbody-barang').append(row);
     });
 
-    // ========== HAPUS BARIS ==========
     $(document).on('click', '.hapus-baris', function() {
         if ($('#tbody-barang tr').length > 1) {
             $(this).closest('tr').remove();

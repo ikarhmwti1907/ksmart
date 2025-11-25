@@ -2,21 +2,35 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4 text-left">💰 Transaksi Penjualan</h2>
+
+    <h2 class="mb-4 text-left">
+        <i class="bi bi-cash-stack me-2"></i> Transaksi Penjualan
+    </h2>
 
     @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle-fill me-1"></i> {{ session('success') }}
+    </div>
     @endif
 
     @if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill me-1"></i> {{ session('error') }}
+    </div>
     @endif
 
+
+    <!--Form Transaksi -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-dark text-white fw-semibold">Input Transaksi</div>
+        <div class="card-header bg-dark text-white fw-semibold">
+            <i class="bi bi-pencil-square me-1"></i> Input Transaksi
+        </div>
+
         <div class="card-body">
 
-            <button type="button" id="tambahBarang" class="btn btn-secondary mb-3">➕ Tambah Barang</button>
+            <button type="button" id="tambahBarang" class="btn btn-secondary mb-3">
+                <i class="bi bi-plus-circle me-1"></i> Tambah Barang
+            </button>
 
             <form action="{{ route('transaksi.store') }}" method="POST" id="formTransaksi">
                 @csrf
@@ -54,7 +68,9 @@
                             <td class="subtotal fw-semibold text-black">Rp 0</td>
 
                             <td>
-                                <button type="button" class="btn btn-outline-danger btn-sm hapus-baris">🗑</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm hapus-baris">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -75,13 +91,20 @@
                     <input type="text" id="kembalian" class="form-control fw-bold text-dark" readonly>
                 </div>
 
-                <button class="btn btn-success" type="submit">💾 Simpan Transaksi</button>
+                <button class="btn btn-success" type="submit">
+                    <i class="bi bi-save me-1"></i> Simpan Transaksi
+                </button>
             </form>
+
         </div>
     </div>
 
+    <!-- Riwayat Transaksi -->
     <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white fw-semibold">🧾 Riwayat Transaksi</div>
+        <div class="card-header bg-dark text-white fw-semibold">
+            <i class="bi bi-receipt-cutoff me-1"></i> Riwayat Transaksi
+        </div>
+
         <div class="card-body">
             <table class="table table-bordered text-center align-middle">
                 <thead class="table-secondary">
@@ -108,6 +131,32 @@
         </div>
     </div>
 </div>
+
+
+<!--Modal Uang Kurang -->
+<div class="modal fade" id="modalUangKurang" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-x-circle-fill me-1"></i> Uang Kurang
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="mb-1">Pembayaran tidak mencukupi untuk total transaksi.</p>
+                <p class="fw-bold text-danger">Transaksi tidak dapat disimpan.</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <style>
 .hasil-pencarian {
@@ -144,6 +193,7 @@
 }
 </style>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -169,9 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("kembalian").value = formatRupiah(bayar - total);
     };
 
-    /* ============================
-        LIVE SEARCH OTOMATIS
-    ============================ */
+
+    /* Cari Barang */
     document.addEventListener("input", function(e) {
         if (!e.target.classList.contains("nama-barang")) return;
 
@@ -219,11 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     });
 
-    /* ============================
-        PILIH BARANG DARI DROPDOWN
-    ============================ */
-    document.addEventListener("click", e => {
 
+    /* Pilih Barang */
+    document.addEventListener("click", e => {
         let btn = e.target.closest(".pilih-barang");
         if (!btn) return;
 
@@ -245,7 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hitungTotal();
     });
 
-    /* Tutup dropdown ketika klik luar */
     document.addEventListener("click", e => {
         document.querySelectorAll(".hasil-pencarian").forEach(box => {
             if (!box.contains(e.target) && !e.target.classList.contains("nama-barang")) {
@@ -254,18 +300,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* ============================
-        INPUT JUMLAH / BAYAR
-    ============================ */
     document.addEventListener("input", e => {
         if (e.target.classList.contains("jumlah") || e.target.id === "bayar") {
             hitungTotal();
         }
     });
 
-    /* ============================
-        TAMBAH BARIS OTOMATIS (FINAL)
-    ============================ */
     document.addEventListener("click", function(e) {
         if (e.target.id === "tambahBarang") {
 
@@ -274,14 +314,12 @@ document.addEventListener("DOMContentLoaded", () => {
             let template = document.querySelector("#tabelBarang tbody tr:first-child");
             let tr = template.cloneNode(true);
 
-            // reset input
             tr.querySelector(".nama-barang").value = "";
             tr.querySelector(".hasil-pencarian").innerHTML = "";
             tr.querySelector(".barang-id").value = "";
             tr.querySelector(".stok-barang").value = "";
             tr.querySelector(".jumlah").value = 1;
 
-            // reset harga & subtotal
             tr.querySelector(".harga").dataset.harga = 0;
             tr.querySelector(".harga").textContent = "Rp 0";
             tr.querySelector(".subtotal").textContent = "Rp 0";
@@ -290,15 +328,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-
-    /* ============================
-        HAPUS BARIS
-    ============================ */
     document.addEventListener("click", e => {
-        if (e.target.classList.contains("hapus-baris")) {
+        if (e.target.closest(".hapus-baris")) {
             let tr = e.target.closest("tr");
             tr.remove();
             hitungTotal();
+        }
+    });
+
+    document.getElementById("formTransaksi").addEventListener("submit", function(e) {
+        let total = getNum(document.getElementById("total").value);
+        let bayar = getNum(document.getElementById("bayar").value);
+
+        if (bayar < total) {
+            e.preventDefault();
+
+            let modal = new bootstrap.Modal(document.getElementById("modalUangKurang"));
+            modal.show();
+
+            return false;
         }
     });
 

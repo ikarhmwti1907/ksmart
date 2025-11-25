@@ -22,13 +22,9 @@ public function showForgotPasswordForm()
 public function sendResetLink(Request $request)
 {
     $request->validate(['email' => 'required|email']);
-
-    // Cek apakah email ada
     if (!\App\Models\User::where('email', $request->email)->exists()) {
         return back()->with('error', 'Email tidak ditemukan!');
     }
-
-    // Kirim pesan sukses (tanpa kirim email)
     return back()->with('success', 'Tautan reset password telah dikirim ke email Anda (simulasi).');
 }
 

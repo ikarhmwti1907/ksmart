@@ -2,9 +2,11 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="mb-3 text-left">📄 Laporan Transaksi</h3>
-    <div class="card shadow-sm">
+    <h3 class="mb-3 text-left">
+        <i class="bi bi-receipt me-2"></i> Laporan Transaksi
+    </h3>
 
+    <div class="card shadow-sm">
         <div class="card-body">
 
             <div class="table-responsive">
@@ -23,9 +25,15 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $row->created_at->format('d-m-Y H:i') }}</td>
-                            <td class="fw-semibold text-dark">Rp {{ number_format($row->total, 0, ',', '.') }}</td>
-                            <td>Rp {{ number_format($row->bayar, 0, ',', '.') }}</td>
-                            <td class="fw-semibold text-dark">Rp {{ number_format($row->kembalian, 0, ',', '.') }}</td>
+                            <td class="fw-semibold text-dark">
+                                Rp {{ number_format($row->total, 0, ',', '.') }}
+                            </td>
+                            <td>
+                                Rp {{ number_format($row->bayar, 0, ',', '.') }}
+                            </td>
+                            <td class="fw-semibold text-dark">
+                                Rp {{ number_format($row->kembalian, 0, ',', '.') }}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

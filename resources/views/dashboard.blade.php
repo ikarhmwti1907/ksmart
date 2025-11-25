@@ -2,8 +2,9 @@
 
 @section('content')
 <div class="container mt-4">
+
     <h3 class="mb-4 text-left fw-bold text-black">
-        📊 Dashboard <span class="text-dark">SmartKasir</span>
+        <i class="bi bi-house-door-fill me-2"></i> Dashboard <span class="text-dark">SmartKasir</span>
     </h3>
 
     <!-- Statistik -->
@@ -11,23 +12,31 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm py-3 hover-card">
                 <div class="card-body">
-                    <h6 class="text-secondary mb-1">Total Barang</h6>
+                    <h6 class="text-secondary mb-1">
+                        <i class="bi bi-box-seam me-1"></i> Total Barang
+                    </h6>
                     <h3 class="fw-bold text-black">{{ $totalBarang }}</h3>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card border-0 shadow-sm py-3 hover-card">
                 <div class="card-body">
-                    <h6 class="text-secondary mb-1">Total Transaksi</h6>
+                    <h6 class="text-secondary mb-1">
+                        <i class="bi bi-receipt-cutoff me-1"></i> Total Transaksi
+                    </h6>
                     <h3 class="fw-bold text-black">{{ $totalTransaksi }}</h3>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card border-0 shadow-sm py-3 hover-card">
                 <div class="card-body">
-                    <h6 class="text-secondary mb-1">Total Pendapatan</h6>
+                    <h6 class="text-secondary mb-1">
+                        <i class="bi bi-cash-stack me-1"></i> Total Pendapatan
+                    </h6>
                     <h3 class="fw-bold text-black">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
                 </div>
             </div>
@@ -40,7 +49,7 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm p-4">
                 <h5 class="mb-3 text-center text-black fw-semibold">
-                    📅 Pendapatan 7 Hari Terakhir
+                    <i class="bi bi-calendar-week me-2"></i> Pendapatan 7 Hari Terakhir
                 </h5>
                 <canvas id="pendapatanChart" height="180"></canvas>
             </div>
@@ -50,20 +59,19 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm p-4">
                 <h5 class="mb-3 text-center text-black fw-semibold">
-                    🔥 Barang Terjual Terbanyak
+                    <i class="bi bi-fire me-2"></i> Barang Terjual Terbanyak
                 </h5>
                 <canvas id="barangChart" height="180"></canvas>
             </div>
         </div>
     </div>
+
 </div>
 
-<!-- Chart JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Efek CSS 
     const style = document.createElement('style');
     style.innerHTML = `
         #pendapatanChart, #barangChart {
@@ -80,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
 
-    // Bar Chart
     const ctxPendapatan = document.getElementById('pendapatanChart');
     const pendapatanChart = new Chart(ctxPendapatan, {
         type: 'bar',
@@ -120,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Doughnut Chart
     const ctxBarang = document.getElementById('barangChart');
     const barangChart = new Chart(ctxBarang, {
         type: 'doughnut',
@@ -160,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-
 <style>
 .hover-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -171,4 +176,5 @@ document.addEventListener('DOMContentLoaded', function() {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 </style>
+
 @endsection

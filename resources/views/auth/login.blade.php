@@ -100,7 +100,7 @@
             @csrf
 
             <div class="mb-3">
-                <label for="email" class="form-label">Username:</label>
+                <label for="email" class="form-label">Email:</label>
                 <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}" required
                     autofocus>
             </div>
@@ -122,7 +122,6 @@
         </form>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

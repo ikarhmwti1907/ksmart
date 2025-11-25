@@ -35,7 +35,7 @@ class TransaksiController extends Controller
         $total += $subtotal;
     }
 
-    // ⛔ Jika bayar belum diinput, jangan proses transaksi
+    // Jika bayar belum diinput, jangan proses transaksi
     if ($request->bayar === null) {
         return redirect()->back()->with('error', 'Masukkan nominal bayar terlebih dahulu!');
     }
