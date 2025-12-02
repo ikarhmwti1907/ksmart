@@ -215,8 +215,7 @@
         display: none;
         z-index: 1000;
     }
-
-    /* Navbar dark mode fix */
+        
     body.bg-dark .navbar-custom {
         background-color: var(--navbar) !important;
     }
@@ -230,7 +229,6 @@
         color: #fff !important;
     }
 
-    /* FIX: Modal harus muncul di depan sidebar */
     .modal {
         z-index: 2000 !important;
     }
